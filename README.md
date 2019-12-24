@@ -7,7 +7,7 @@ This module is designed for sorting an array step by step, based on manual choic
 ## Demo
 A simple demo web app is available to demonstrate what is possible [here](https://ampheul.github.io/elm-step-sorter/). It is programmed in elm, but the concepts are almost identical in javascript.
 
-*Note:* This app works on local upload only. Source code for the demo is available on [elm-step-sorter](https://github.com/ampheul/elm-step-sorter).
+*Note:* Source code for the demo is available on [elm-step-sorter](https://github.com/ampheul/elm-step-sorter).
 
 ## Motivation
 
