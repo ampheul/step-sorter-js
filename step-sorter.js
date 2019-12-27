@@ -130,8 +130,6 @@ module.exports = {
     init_merge: init_merge,
     init_sort: init_sort,
     sort_step: sort_step,
-    type: type,
-    data: data,
     is_merging : is_type(merging),
     is_sorting : is_type(sorting),
     choices: choices
