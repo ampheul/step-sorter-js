@@ -5,19 +5,19 @@ var ss = require('./step-sorter');
 var sorted_list = range(0,50);
 
 var xs = shuffle(sorted_list.slice());
-console.log("UNSORTED:\n",xs);
+console.log("UNSORTED:\n", xs);
 
 // begin sorting
-sort_alg = ss.init_sort(xs);
+var sort_alg = ss.init_sort(xs);
 
 // step through the sorting process automatically
 while (ss.is_sorting(sort_alg)) {
     [a,b] = ss.choices(sort_alg);
     if (a > b) {
-        xs = ss.sort_step(ss.lt, sort_alg);
+        sort_alg = ss.sort_step(ss.lt, sort_alg);
     }
     else {
-        xs = ss.sort_step(ss.gt, sort_alg);
+        sort_alg = ss.sort_step(ss.gt, sort_alg);
     }
 }
 
