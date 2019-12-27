@@ -1,30 +1,34 @@
 //-- KEYS FOR TYPE TAGS
 
-var type_key = '$type';
+var type = '$type';
 
-var data_key = '$data';
+var data = '$data';
 
-var typed_obj = (the_type, data) => {
+var typed_obj = (the_type, the_data) => {
     var val = {};
-    val[type_key] = the_type;
-    val[data_key] = data;
+    val[type] = the_type;
+    val[data] = the_data;
 
     return val;
 }
 
-
+var is_type = (the_type) => (the_obj) => {
+    return typeof(the_obj) === 'object' && the_obj[type] === the_type;
+};
 
 //-- UTILITY
 
 var eq = 0;
+
 var gt = 1;
+
 var lt = 2;
 
 var cons_nonempty = ([a, as], b) => [b, [a, ...as]];
 
 var choices = (sorting) => {
-    let [, , merge] = sorting[data_key];
-    let [, [l],[r]] = merge[data_key];
+    let [, , merge] = sorting[data];
+    let [, [l],[r]] = merge[data];
     return [l, r];
 };
 
@@ -37,8 +41,18 @@ var merging = 'merging';
 var make_merging =
     (stack, left, right) => typed_obj(merging, [stack, left, right]);
 
+var init_merge = (left, right) => {
+    if (left.length === 0) return left;
+    if (right.length === 0) return right;
+    
+    let [l,...ls] = left;
+    let [r,...rs] = right;
+
+    return make_merging([], [l, ls], [r, rs]);
+};
+
 var merge_step = (ord, merge) => {
-    let [stack, [l, ls], [r, rs]] = merge[data_key];
+    let [stack, [l, ls], [r, rs]] = merge[data];
 
     if (ord === eq) {
         return merge_step(gt, merge);
@@ -64,23 +78,28 @@ var sorting = 'sorting';
 var make_sorting =
     (merged, unmerged, merge) => typed_obj(sorting, [merged, unmerged, merge]);
 
+var is_sorting =
+    (x) => x && typeof(x) === 'object' && x[type] === sorting
+
+
 var init_sort = (xs) => {
-    if (xs.length > 1) {
-        let [x, y, ...ys] = xs;
-        return make_sorting([], ys.map((a) => [a, []]), make_merging([], [x, []], [y, []]));
-    } else {
+    if (xs.length < 2)
         return xs;
-    }
+
+    let [x, y, ...ys] = xs;
+    let f  = (a) => [a, []];
+    
+    return make_sorting([], ys.map(f), init_merge([x], [y]));
 };
 
 var sort_step = (ord, sort) => {
-    [merged, unmerged, merge] = sort[data_key];
+    [merged, unmerged, merge] = sort[data];
 
     // step forward in the merge, only place we use ord
     merge = merge_step(ord, merge);
 
     // if the merge is still ongoing, return an updated sort
-    if (typeof(merge) === 'object' && merge[type_key] === merging) {
+    if (typeof(merge) === 'object' && merge[type] === merging) {
         return make_sorting(merged, unmerged, merge);
     }
     // pick two more lists to merge, the continue as before
@@ -108,9 +127,12 @@ module.exports = {
     eq: eq,
     gt: gt,
     lt: lt,
+    init_merge: init_merge,
     init_sort: init_sort,
     sort_step: sort_step,
-    type: type_key,
-    data: data_key,
+    type: type,
+    data: data,
+    is_merging : is_type(merging),
+    is_sorting : is_type(sorting),
     choices: choices
 };

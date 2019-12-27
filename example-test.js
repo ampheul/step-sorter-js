@@ -8,22 +8,24 @@ var xs = shuffle(sorted_list.slice());
 console.log("UNSORTED:\n",xs);
 
 // begin sorting
-xs = ss.init_sort(xs);
+sort_alg = ss.init_sort(xs);
 
 // step through the sorting process automatically
-while (xs[ss.type] === 'sorting') {
-    [a,b] = ss.choices(xs);
+while (ss.is_sorting(sort_alg)) {
+    [a,b] = ss.choices(sort_alg);
     if (a > b) {
-        xs = ss.sort_step(ss.lt, xs);
+        xs = ss.sort_step(ss.lt, sort_alg);
     }
     else {
-        xs = ss.sort_step(ss.gt, xs);
+        xs = ss.sort_step(ss.gt, sort_alg);
     }
 }
 
-console.log("SORTED:\n", xs)
+let sort_result = sort_alg;
 
-if (compare_arrays(xs, sorted_list)) {
+console.log("SORTED:\n", sort_result);
+
+if (compare_arrays(sort_result, sorted_list)) {
     console.log("Sorting was successful!");
 }
 else {
