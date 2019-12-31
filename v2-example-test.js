@@ -1,4 +1,4 @@
-var step_sorter = require('./generator-version');
+var step_sorter = require('./step-sorter-v2');
 var helper = require('helper');
 
 
