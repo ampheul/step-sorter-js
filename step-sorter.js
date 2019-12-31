@@ -1,8 +1,27 @@
+var currify = f => {
+    // peel an argument from the front 
+    let peel = g => (...xs) => y => g(...xs,y);
+    let g = f;
+    for (let i = 0; i < f.length; i++ ){
+        g = peel(g);
+    }
+    return g;
+}
+
+var argify = f => (...xs) => {
+    // accumulate on f
+    
+    for (let i = 0; typeof(f) === 'function' && i < xs.length; i++ ) {
+        
+    }
+    return f;
+}
+
 //-- KEYS FOR TYPE TAGS
 
-var type = '$type';
+var type = Symbol('type');
 
-var data = '$data';
+var data = Symbol('data');
 
 var typed_obj = (the_type, the_data) => {
     var val = {};
