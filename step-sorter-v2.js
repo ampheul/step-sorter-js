@@ -1,16 +1,14 @@
+// -- ORD
+
 var lt = Symbol('less-than');
 var gt = Symbol('greater-than');
 
-/**
-merge
------
-regular merge function.
-*/
-function* merge(xs, buffer, start, middle, end) {
 
+// -- MERGING AND SORTING
+
+function* merge(xs, buffer, start, middle, end) {
     var i = 0;
-    var j = 0;
-    
+    var j = 0;    
     while (i + start < middle && j + middle < end) {
         var choice = yield [xs[i+start], xs[j+middle]];
         if (choice === lt) {
@@ -18,12 +16,8 @@ function* merge(xs, buffer, start, middle, end) {
             i++;
         }
         else if (choice === gt) {
-
             buffer[start+i+j] = xs[j+middle];
             j++;
-        }
-        else {
-            console.log("choice did not match anything");
         }
     }
     if (i + start >= middle) {
@@ -42,20 +36,6 @@ function* merge(xs, buffer, start, middle, end) {
     return buffer;
 }
 
-function* chain(gen1, gen2) {
-    var x = gen1.next();
-    while ( !x.done ) {
-        x = gen1.next(yield x.value);
-    }
-    var y = gen2.next();
-    while ( !y.done ) {
-        y = gen2.next(yield y.value);
-    }
-
-    return y.value;
-}
-function* empty_generator() {}
-
 
 function merge_sort(xs) {
     function recurse(xs, buffer, start, end) {
@@ -72,6 +52,23 @@ function merge_sort(xs) {
     }
     return recurse(xs, xs.slice(), 0, xs.length);
 }
+
+
+// -- GENERATOR STUFF
+
+function* chain(gen1, gen2) {
+    var x = gen1.next();
+    while ( !x.done ) {
+        x = gen1.next(yield x.value);
+    }
+    x = gen2.next();
+    while ( !x.done ) {
+        x = gen2.next(yield x.value);
+    }
+    return x.value;
+}
+
+function* empty_generator() {}
 
 
 module.exports = {
